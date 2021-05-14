@@ -40,6 +40,7 @@ class Snake{
 vector<int> testV;
 vector<int>::iterator it;
 vector<vector<int>> Vs;
+
 int myers(string A, string B) {
 
     int N = A.length();
@@ -50,7 +51,8 @@ int myers(string A, string B) {
     int xStartPoint, yStartPoint, xMidPoint, yMidPoint, xEndPoint, yEndPoint, snakeLength, previousK;
     bool moveDown;
 
-    for (int d = 0; d <= N + M; d++) {   //find furthest paths for incrementing d values
+
+    for (int d = 0; d <= N + M; d++) {        //find furthest paths for incrementing d values
         for (int k = -d; k <= d; k += 2) {   //find furthest path for incrementing k lines
 
             moveDown = (k == -d || (k != d && V[k - 1] < V[k + 1])); //determine if next move is down or right
@@ -66,7 +68,7 @@ int myers(string A, string B) {
             yEndPoint = yMidPoint; //initialize x and y values of end point to mid point
 
             snakeLength = 0; //start snake at 0
-            while (xEndPoint < N && yEndPoint < M && A[xEndPoint] == B[yEndPoint]) { //while A and B match (follwing )
+            while (xEndPoint < N && yEndPoint < M && A[xEndPoint] == B[yEndPoint]) { //while A and B match (following diagonal)
                 xEndPoint++; 
                 yEndPoint++; 
                 snakeLength++;
@@ -74,21 +76,28 @@ int myers(string A, string B) {
 
             V[k] = xEndPoint; //save x value of end point in V
             //testV.insert(it,k,xEndPoint);
-            //testV[k] = xEndPoint;
-            //testV.push_back(xEndPoint);
+            testV.push_back(xEndPoint);
 
             if (xEndPoint >= N && yEndPoint >= M) { //solution has been found when this coord is reached
                 cout << "solution found" << endl;
                 for (int i = 0; i < d; i++)
                     cout << V[i] << " ";
                 cout << endl;
-                for (int i = 0; i < d; i++)
-                    cout << testV[i] << " ";
+                // for (int i = 0; i < d; i++)
+                //     cout << testV[i] << " ";
                 cout << "\nd: " << d << "\n";
+
+                for (int i = 0; i < Vs.size(); i++) {
+                    for (int j = 0; j < Vs[i].size(); j++)
+                        cout << Vs[i][j] << " ";
+                    cout << endl;
+                }
+
                 return d;
             }
         }
-        //Vs.push_back(testV);
+        Vs.push_back(testV);
+        testV.clear();
         //Vs.insert(Vs.end(), &V[0], &V[sizeof(V)/sizeof(int)]);
     }
     return -1;
@@ -124,21 +133,6 @@ int main() {
     string B = "CBABAC";
     //char A[] = "ABCABBA";
     //char B[] = "CBABAC";
-
-    string C = "Hamlet: Do you see yonder cloud that's almost in shape of a camel? \
-Polonius: By the mass, and 'tis like a camel, indeed. \
-Hamlet: Methinks it is like a weasel. \
-Polonius: It is backed like a weasel. \
-Hamlet: Or like a whale? \
-Polonius: Very like a whale. \
--- Shakespeare";
-    string D = "Hamlet: Do you see the cloud over there that's almost the shape of a camel? \
-Polonius: By golly, it is like a camel, indeed. \
-Hamlet: I think it looks like a weasel. \
-Polonius: It is shaped like a weasel. \
-Hamlet: Or like a whale?  \
-Polonius: It's totally like a whale. \
--- Shakespeare";
 
     cout << "\n---------------\n";
     myers(A,B);
