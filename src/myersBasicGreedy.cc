@@ -38,10 +38,14 @@ class Snake{
 
 
 vector<int> testV;
-vector<int>::iterator it;
+//vector<int>::iterator it;
 vector<vector<int>> Vs;
 
-int myers(string A, string B) {
+vector<vector<int>> myers(string A, string B) {
+
+    vector<int> testV;
+    //vector<int>::iterator it;
+    vector<vector<int>> Vs;
 
     int N = A.length();
     int M = B.length();
@@ -79,49 +83,89 @@ int myers(string A, string B) {
             testV.push_back(xEndPoint);
 
             if (xEndPoint >= N && yEndPoint >= M) { //solution has been found when this coord is reached
-                cout << "solution found" << endl;
-                for (int i = 0; i < d; i++)
-                    cout << V[i] << " ";
-                cout << endl;
-                cout << "\nd: " << d << "\n";
+                cout << "solution found\nd = " << d << "\n\n";
+                // for (int i = 0; i < d; i++)
+                //     cout << V[i] << " ";
+                // cout << endl;
+                // cout << "\nd: " << d << "\n";
 
-                for (int i = 0; i < Vs.size(); i++) {
-                    for (int j = 0; j < Vs[i].size(); j++)
-                        cout << Vs[i][j] << " ";
-                    cout << endl;
-                }
-
-                return d;
+                // for (int i = 0; i < Vs.size(); i++) {
+                //     for (int j = 0; j < Vs[i].size(); j++)
+                //         cout << Vs[i][j] << " ";
+                //     cout << endl;
+                // }
+                return Vs;
             }
         }
         Vs.push_back(testV);
         testV.clear();
     }
-    return -1;
 }
 
-void reverseDiff(string A, string B) {
-
+void reverseDiff(string A, string B, vector<vector<int>> Vs, int D) {
+    
     int N = A.length();
     int M = B.length();
-    //list<V> Vs;
-    //list<Snake> snakes;
-    Point p(N,M);
-    Point q(1,2);
-    Point r(3,4);
-    Snake test(p,q,r);
-    int x,y;
+    int d = Vs.size();
+    //int * V[];
 
-    //for ()
-    cout << "N,M = " << p.x << "," << p.y << endl;
-    cout << "N,M = " << p << endl;
-    cout << "Snake test = " << test << endl;
+    int k,x,y,prevK,prevX,prevY;
+    string patch = "";
 
-    for (int i = 0; i < Vs.size(); i++) {
-        for (int j = 0; j < Vs[i].size(); j++)
-            cout << Vs[i][j] << " ";
-        cout << endl;
+    x = N; 
+    y = M;
+    //for (int i = 1; i <= d; i++)
+    int fullSize = ((d * (d + 1)) / 2);
+    int *V = new int[fullSize];
+
+    for (int d = D; d >= 0; d--){
+        for (int j = 0; j < Vs[d].size(); j++)
+            V[j] = Vs[d][j];
     }
+
+     for (int d = D; x > 0 || y > 0; d--){
+        //y = x - k ==> k = x - y
+        k = x - y;
+
+        // if (k == -d || (k !=d && V[k-1] < V[k+1])){
+        //     prevK = k + 1;
+        // }
+        // else{
+        //     prevK = k - 1;
+        // }
+    
+    //init prev k, x, y
+        prevK = (k == -d || (k != d && V[k-1] < V[k+1])) ? k + 1 : k - 1;
+        prevX = V[prevK];
+        prevY = prevX - prevK;
+
+    //follow diagonals
+        while (x > prevX && y > prevY){
+            x--;
+            y--;
+        }
+
+    //construct patch:
+        if(x == prevX) { //down move - insertion
+        cout << "down move\n";
+        patch = to_string(prevX) + "I" + B[prevX] + " " + patch;
+        }
+        else { // right move - deletion
+        cout << "right move\n";
+        patch = to_string(prevX) + "D " + patch;
+        }
+        x = prevX;
+        y = prevY;
+        //delete V;
+    }
+    cout << patch << endl;
+
+//------------------------------------------
+    // for (int i = 0; i < Vs.size(); i++) {
+    // for (int j = 0; j < Vs[i].size(); j++)
+    //     cout << Vs[i][j] << " ";
+    // cout << endl;
+    // }
 }
 
 
@@ -131,9 +175,11 @@ int main() {
     //char A[] = "ABCABBA";
     //char B[] = "CBABAC";
 
-    cout << "\n---------------\n";
-    myers(A,B);
-    cout << "---------------\n";
-    reverseDiff(A,B);
-    return 0;
+    // cout << "\n---------------\n";
+    // myers(A,B);
+    // cout << "---------------\n";
+
+    //vector<vector<int>> test = myers(A,B);
+    reverseDiff(A,B,myers(A,B),5);
+
 }
