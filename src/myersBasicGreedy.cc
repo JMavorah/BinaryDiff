@@ -83,8 +83,6 @@ int myers(string A, string B) {
                 for (int i = 0; i < d; i++)
                     cout << V[i] << " ";
                 cout << endl;
-                // for (int i = 0; i < d; i++)
-                //     cout << testV[i] << " ";
                 cout << "\nd: " << d << "\n";
 
                 for (int i = 0; i < Vs.size(); i++) {
@@ -98,7 +96,6 @@ int myers(string A, string B) {
         }
         Vs.push_back(testV);
         testV.clear();
-        //Vs.insert(Vs.end(), &V[0], &V[sizeof(V)/sizeof(int)]);
     }
     return -1;
 }
