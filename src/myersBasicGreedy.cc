@@ -38,6 +38,7 @@ class Snake{
 
 
 vector<int> testV;
+vector<int>::iterator it;
 vector<vector<int>> Vs;
 int myers(string A, string B) {
 
@@ -45,7 +46,7 @@ int myers(string A, string B) {
     int M = B.length();
     int * V = new int [2*(N+M)];
     V[1] = 0;
-    
+
     int xStartPoint, yStartPoint, xMidPoint, yMidPoint, xEndPoint, yEndPoint, snakeLength, previousK;
     bool moveDown;
 
@@ -72,17 +73,23 @@ int myers(string A, string B) {
             }
 
             V[k] = xEndPoint; //save x value of end point in V
-            testV.push_back(xEndPoint);
+            //testV.insert(it,k,xEndPoint);
+            //testV[k] = xEndPoint;
+            //testV.push_back(xEndPoint);
 
             if (xEndPoint >= N && yEndPoint >= M) { //solution has been found when this coord is reached
                 cout << "solution found" << endl;
                 for (int i = 0; i < d; i++)
                     cout << V[i] << " ";
+                cout << endl;
+                for (int i = 0; i < d; i++)
+                    cout << testV[i] << " ";
                 cout << "\nd: " << d << "\n";
                 return d;
             }
         }
-        Vs.push_back(testV);
+        //Vs.push_back(testV);
+        //Vs.insert(Vs.end(), &V[0], &V[sizeof(V)/sizeof(int)]);
     }
     return -1;
 }
@@ -112,8 +119,6 @@ void reverseDiff(string A, string B) {
 }
 
 
-
-
 int main() {
     string A = "ABCABBA";
     string B = "CBABAC";
@@ -141,4 +146,3 @@ Polonius: It's totally like a whale. \
     reverseDiff(A,B);
     return 0;
 }
-
