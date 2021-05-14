@@ -7,47 +7,74 @@ https://github.com/psionic12/Myers-Diff-in-c-
 https://gist.github.com/Quasar-Kim/cafb5415ed111e47716c403de2490007 */
 #include <iostream> 
 #include <string.h>
+#include <list>
+#include <vector>
 using namespace std;
 
+class Point{
+    public:
+        int x,y;
+        Point(): x(0),y(0){}
+        Point(int x, int y): x(x),y(y){}
+
+        friend ostream& operator <<(ostream& s, const Point& a){
+        s << a.x << ',' << a.y;
+        return s;
+    }
+};
+
+class Snake{
+    public:
+        Point start;
+        Point mid;
+        Point end;
+        Snake(Point start, Point mid, Point end): start(start),mid(mid),end(end){}
+
+        friend ostream& operator <<(ostream& s, const Snake& a){
+        s << "(" << a.start << "), (" << a.mid << "), (" << a.end << ")";
+        return s;
+        }
+};
+
+
+vector<int> testV;
+vector<vector<int>> Vs;
 int myers(string A, string B) {
 
     int N = A.length();
     int M = B.length();
-    int V[N*M];
-    //int V[100];
+    int * V = new int [2*(N+M)];
     V[1] = 0;
-    cout << "\n size of V: " << M*N << "\n\n";
-    int xStart, yStart, xMid, yMid, xEnd, yEnd, snake, previousK;
-    bool down;
+    
+    int xStartPoint, yStartPoint, xMidPoint, yMidPoint, xEndPoint, yEndPoint, snakeLength, previousK;
+    bool moveDown;
 
     for (int d = 0; d <= N + M; d++) {   //find furthest paths for incrementing d values
         for (int k = -d; k <= d; k += 2) {   //find furthest path for incrementing k lines
 
-            down = (k == -d || (k != d && V[k - 1] < V[k + 1])); //determine if next move is down or right
+            moveDown = (k == -d || (k != d && V[k - 1] < V[k + 1])); //determine if next move is down or right
+            previousK = moveDown ? k + 1 : k - 1; //set previous K line depending on move direction
 
-            previousK = down ? k + 1 : k - 1; //set previous K line depending on move direction
+            xStartPoint = V[previousK];
+            yStartPoint = xStartPoint - previousK; //set x and y values of start point
 
-            xStart = V[previousK];
-            yStart = xStart - previousK; //set x and y values of start point
+            xMidPoint = moveDown ? xStartPoint : xStartPoint + 1;
+            yMidPoint = xMidPoint - k; //set x and y values of mid point
 
-            xMid = down ? xStart : xStart + 1;
-            yMid = xMid - k; //set x and y values of mid point
+            xEndPoint = xMidPoint;
+            yEndPoint = yMidPoint; //initialize x and y values of end point to mid point
 
-            xEnd = xMid;
-            yEnd = yMid; //initialize x and y values of end point to mid point
-
-            
-            snake = 0; //start snake at 0
-            while (xEnd < N && yEnd < M && A[xEnd] == B[yEnd]) { //while values from A and B match ==> while following diagonals
-                xEnd++; 
-                yEnd++; 
-                snake++;
+            snakeLength = 0; //start snake at 0
+            while (xEndPoint < N && yEndPoint < M && A[xEndPoint] == B[yEndPoint]) { //while A and B match (follwing )
+                xEndPoint++; 
+                yEndPoint++; 
+                snakeLength++;
             }
 
-            V[k] = xEnd; //save x value of end point in V
+            V[k] = xEndPoint; //save x value of end point in V
+            testV.push_back(xEndPoint);
 
-            // check for solution
-            if (xEnd >= N && yEnd >= M) /* solution has been found */{
+            if (xEndPoint >= N && yEndPoint >= M) { //solution has been found when this coord is reached
                 cout << "solution found" << endl;
                 for (int i = 0; i < d; i++)
                     cout << V[i] << " ";
@@ -55,13 +82,44 @@ int myers(string A, string B) {
                 return d;
             }
         }
+        Vs.push_back(testV);
     }
     return -1;
 }
 
+void reverseDiff(string A, string B) {
+
+    int N = A.length();
+    int M = B.length();
+    //list<V> Vs;
+    //list<Snake> snakes;
+    Point p(N,M);
+    Point q(1,2);
+    Point r(3,4);
+    Snake test(p,q,r);
+    int x,y;
+
+    //for ()
+    cout << "N,M = " << p.x << "," << p.y << endl;
+    cout << "N,M = " << p << endl;
+    cout << "Snake test = " << test << endl;
+
+    for (int i = 0; i < Vs.size(); i++) {
+        for (int j = 0; j < Vs[i].size(); j++)
+            cout << Vs[i][j] << " ";
+        cout << endl;
+    }
+}
+
+
+
+
 int main() {
     string A = "ABCABBA";
     string B = "CBABAC";
+    //char A[] = "ABCABBA";
+    //char B[] = "CBABAC";
+
     string C = "Hamlet: Do you see yonder cloud that's almost in shape of a camel? \
 Polonius: By the mass, and 'tis like a camel, indeed. \
 Hamlet: Methinks it is like a weasel. \
@@ -76,12 +134,11 @@ Polonius: It is shaped like a weasel. \
 Hamlet: Or like a whale?  \
 Polonius: It's totally like a whale. \
 -- Shakespeare";
-    //int N = A.length();
-    //int M = B.length();
-    //cout << N << "   " << M << endl;
+
+    cout << "\n---------------\n";
     myers(A,B);
     cout << "---------------\n";
-    myers(C,D);
+    reverseDiff(A,B);
     return 0;
 }
 
