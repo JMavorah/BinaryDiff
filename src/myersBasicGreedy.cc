@@ -79,107 +79,91 @@ vector<vector<int>> myers(string A, string B) {
             }
 
             V[k] = xEndPoint; //save x value of end point in V
-            //testV.insert(it,k,xEndPoint);
             testV.push_back(xEndPoint);
 
             if (xEndPoint >= N && yEndPoint >= M) { //solution has been found when this coord is reached
                 cout << "solution found\nd = " << d << "\n\n";
-                // for (int i = 0; i < d; i++)
-                //     cout << V[i] << " ";
-                // cout << endl;
-                // cout << "\nd: " << d << "\n";
-
-                // for (int i = 0; i < Vs.size(); i++) {
-                //     for (int j = 0; j < Vs[i].size(); j++)
-                //         cout << Vs[i][j] << " ";
-                //     cout << endl;
-                // }
                 return Vs;
             }
         }
         Vs.push_back(testV);
         testV.clear();
     }
+    //return Vs;
 }
 
-void reverseDiff(string A, string B, vector<vector<int>> Vs, int D) {
+void reverseDiff(string A, string B, vector<vector<int>> Vs) {
     
     int N = A.length();
     int M = B.length();
-    int d = Vs.size();
-    //int * V[];
-
+    int D = Vs.size();
     int k,x,y,prevK,prevX,prevY;
     string patch = "";
-
     x = N; 
     y = M;
-    //for (int i = 1; i <= d; i++)
-    int fullSize = ((d * (d + 1)) / 2);
+
+    int fullSize = ((D * (D + 1)) / 2);
     int *V = new int[fullSize];
 
-    for (int d = D; d >= 0; d--){
-        for (int j = 0; j < Vs[d].size(); j++)
-            V[j] = Vs[d][j];
+    int j = 0;
+    int index = 0;
+  
+    //load Vs into one array V
+    for (int d = D-1; d >= 0; d--){ // 5...0
+        while(index < Vs[d].size())
+            V[j++] = Vs[d][index++];
+        index = 0;
     }
 
-     for (int d = D; x > 0 || y > 0; d--){
+    //V = [7,7,5,4,3,5,5,4,3,3,2,2,1,0,0];
+    //V[0]=7;  V[1]=7; V[2]=5; V[3]=4; V[4]=3; V[5]=5; V[6]=5; V[7]=4; V[8]=3; V[9]=3; V[10]=2; V[11]=2; V[12]=1; V[13]=0;  V[14]=0;
+
+    //print V
+    for (int i = 0; i < fullSize; i++)
+        cout << V[i] << " ";
+    cout << "\n";
+    
+
+    for (int d = D; d > 0;/*x > 0 || y > 0;*/ d--){
         //y = x - k ==> k = x - y
         k = x - y;
+        // cout << "Before prev init: k, x, y, = " << k << ", " << x << ", " << y << "\n";
+        // cout << "After init: prevK, prevX, prevY, = " << prevK << ", " << prevX << ", " << prevY << "\n\n";
 
-        // if (k == -d || (k !=d && V[k-1] < V[k+1])){
-        //     prevK = k + 1;
-        // }
-        // else{
-        //     prevK = k - 1;
-        // }
-    
-    //init prev k, x, y
+        //init prev k, x, y
         prevK = (k == -d || (k != d && V[k-1] < V[k+1])) ? k + 1 : k - 1;
         prevX = V[prevK];
         prevY = prevX - prevK;
+        // cout << "After prev init: k, x, y, = " << k << ", " << x << ", " << y << "\n";
+        // cout << "After init: prevK, prevX, prevY, = " << prevK << ", " << prevX << ", " << prevY << "\n\n";
 
-    //follow diagonals
+        //follow diagonals
         while (x > prevX && y > prevY){
             x--;
             y--;
         }
+        // cout << "After while: k, x, y, = " << k << ", " << x << ", " << y << "\n";
+        // cout << "After init: prevK, prevX, prevY, = " << prevK << ", " << prevX << ", " << prevY << "\n\n";
 
-    //construct patch:
+        //construct patch:
         if(x == prevX) { //down move - insertion
-        cout << "down move\n";
+        cout << "down move - insertion\n";
         patch = to_string(prevX) + "I" + B[prevX] + " " + patch;
         }
         else { // right move - deletion
-        cout << "right move\n";
+        cout << "right move - deletion\n";
         patch = to_string(prevX) + "D " + patch;
         }
         x = prevX;
         y = prevY;
-        //delete V;
     }
     cout << patch << endl;
-
-//------------------------------------------
-    // for (int i = 0; i < Vs.size(); i++) {
-    // for (int j = 0; j < Vs[i].size(); j++)
-    //     cout << Vs[i][j] << " ";
-    // cout << endl;
-    // }
 }
 
 
 int main() {
     string A = "ABCABBA";
     string B = "CBABAC";
-    //char A[] = "ABCABBA";
-    //char B[] = "CBABAC";
 
-    // cout << "\n---------------\n";
-    // myers(A,B);
-    // cout << "---------------\n";
-
-    //vector<vector<int>> test = myers(A,B);
-    reverseDiff(A,B,myers(A,B),5);
-
+    reverseDiff(A,B,myers(A,B));
 }
