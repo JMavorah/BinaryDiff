@@ -10,7 +10,7 @@ https://gist.github.com/Quasar-Kim/cafb5415ed111e47716c403de2490007 */
 #include <list>
 #include <vector>
 using namespace std;
-
+/*
 class Point{
     public:
         int x,y;
@@ -35,7 +35,7 @@ class Snake{
         return s;
         }
 };
-
+*/
 
 vector<int> testV;
 //vector<int>::iterator it;
