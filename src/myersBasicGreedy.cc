@@ -94,8 +94,7 @@ void reverseDiff(string A, string B, vector<vector<int>> Vs) {
     int D = Vs.size();
     int k,x,y,prevK,prevX,prevY;
     string patch = "";
-    x = N; 
-    y = M;
+
 
     int fullSize = ((D * (D + 1)) / 2);
     int *V = new int[fullSize];
@@ -110,16 +109,18 @@ void reverseDiff(string A, string B, vector<vector<int>> Vs) {
         index = 0;
     }
 
-    //V = [7,7,5,4,3,5,5,4,3,3,2,2,1,0,0];
-    //V[0]=7;  V[1]=7; V[2]=5; V[3]=4; V[4]=3; V[5]=5; V[6]=5; V[7]=4; V[8]=3; V[9]=3; V[10]=2; V[11]=2; V[12]=1; V[13]=0;  V[14]=0;
 
     //print V
     for (int i = 0; i < fullSize; i++)
         cout << V[i] << " ";
     cout << "\n";
     
-
-    for (int d = D; d > 0;/*x > 0 || y > 0;*/ d--){
+    //start at end of edit graph [point (N,M)]
+    x = N; 
+    y = M;
+    
+    //for (int d = D; d > 0;  d--){
+    for (int d = -D; d >= D; d--){ //increment from -D to D to retrace solution trace
         //y = x - k ==> k = x - y
         k = x - y;
         // cout << "Before prev init: k, x, y, = " << k << ", " << x << ", " << y << "\n";
@@ -132,7 +133,8 @@ void reverseDiff(string A, string B, vector<vector<int>> Vs) {
         // cout << "After prev init: k, x, y, = " << k << ", " << x << ", " << y << "\n";
         // cout << "After init: prevK, prevX, prevY, = " << prevK << ", " << prevX << ", " << prevY << "\n\n";
 
-        //follow diagonals
+        //follow any diagonals:
+        //if x and y are both greater than previous ==> diagonal move
         while (x > prevX && y > prevY){
             x--;
             y--;
@@ -141,11 +143,11 @@ void reverseDiff(string A, string B, vector<vector<int>> Vs) {
         // cout << "After init: prevK, prevX, prevY, = " << prevK << ", " << prevX << ", " << prevY << "\n\n";
 
         //construct patch:
-        if(x == prevX) { //down move - insertion
+        if(x == prevX) { //same x ==> change in y ==> down move - insertion
         cout << "down move - insertion\n";
         patch = to_string(prevX) + "I" + B[prevX] + " " + patch;
         }
-        else { // right move - deletion
+        else { // same y ==> change in x ==> right move - deletion
         cout << "right move - deletion\n";
         patch = to_string(prevX) + "D " + patch;
         }
