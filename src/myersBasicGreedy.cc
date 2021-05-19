@@ -119,8 +119,7 @@ void reverseDiff(string A, string B, vector<vector<int>> Vs) {
     x = N; 
     y = M;
     
-    //for (int d = D; d > 0;  d--){
-    for (int d = -D; d >= D; d--){ //increment from -D to D to retrace solution trace
+    for (int d = D; d > 0;  d--){ //increment from -D to D to retrace solution trace
         //y = x - k ==> k = x - y
         k = x - y;
         // cout << "Before prev init: k, x, y, = " << k << ", " << x << ", " << y << "\n";
