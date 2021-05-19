@@ -37,14 +37,9 @@ class Snake{
 };
 */
 
-vector<int> testV;
-//vector<int>::iterator it;
-vector<vector<int>> Vs;
-
 vector<vector<int>> myers(string A, string B) {
 
     vector<int> testV;
-    //vector<int>::iterator it;
     vector<vector<int>> Vs;
 
     int N = A.length();
